@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/zaktaw/DRWR#readme",
   "dependencies": {
+    "chalk": "^4.1.0",
     "commander": "^6.2.0",
     "inquirer": "^7.3.3",
     "mongoose": "^5.10.10"

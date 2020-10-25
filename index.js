@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const utilities = require('./utilites');
+const chalk = require('chalk');
 
 //Map global promise (to get rid of warning)
 mongoose.Promise = global.Promise;
@@ -23,7 +24,7 @@ const addItem = (item) => {
     const db = mongoose.connection;
 
     Item.create(item).then(item => {
-        console.info('New item added');
+        console.info(chalk.green('New item added'));
         db.close();
     });
 }
@@ -38,8 +39,8 @@ const listItems = (type) => {
     if (type) {
         Item.find({type: type})
         .then(items => {
-            console.info(type + ':');
-            items.forEach((item) => console.info(item.title));
+            console.info(chalk.bold(type + ':'));
+            items.forEach((item) => console.info(chalk.blue(item.title)));
             db.close();
         });
     }
@@ -48,7 +49,7 @@ const listItems = (type) => {
     else {
         Item.find()
         .then(items => {
-            items.forEach((item) => console.info(item.type + ': ' + item.title));
+            items.forEach((item) => console.info(item.type + ': ' + chalk.bold.blue(item.title)));
             db.close();
         });
     }
@@ -81,7 +82,7 @@ const updateItem = (_id, item) => {
 
     Item.updateOne({_id}, item)
         .then(item => {
-            console.info('Item updated');
+            console.info(chalk.green('Item updated'));
             db.close();
         });
 }
@@ -95,8 +96,8 @@ const deleteItem = (_id) => {
     Item.deleteOne({_id})
         .then((item) => {
             //Check if any items has been deleted
-            if (item.deletedCount > 0) console.info('Item deleted');
-            else console.info("Couldn't find any items with matching id. No items deleted.");
+            if (item.deletedCount > 0) console.info(chalk.green('Item deleted'));
+            else console.info(chalk.red("Couldn't find any items with matching id. No items deleted."));
             db.close();
         });
 }
@@ -109,7 +110,7 @@ const deleteAllItems = () => {
 
     Item.deleteMany({})
         .then(() => {
-            console.info('All items deleted');
+            console.info(chalk.green('All items deleted'));
             db.close();
         });
 }
@@ -128,15 +129,15 @@ const randomItem = (type, exclude) => {
         if (items.length > 0) {
             let randNum = utilities.genRandNum(0,items.length-1); //generate a random number between start and end of item list.length
             randItem = items[randNum];
-            console.info(randItem.type + ': ' + randItem.title);  
+            console.info(chalk.white(randItem.type + ': ') + chalk.bold.blue(randItem.title));  
         }
 
-        else console.info('There are no items in the database');    
+        else console.info(chalk.red('There are no items in the database'));    
     })
     .then(() => {
         if (exclude) {
             Item.updateOne(randItem._id, {include: false});
-            console.info('Item is now excluded');
+            console.info(chalk.green('Item is now excluded'));
         }
     })
     .then(() => db.close());
