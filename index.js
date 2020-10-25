@@ -4,13 +4,22 @@ const utilities = require('./utilites');
 //Map global promise (to get rid of warning)
 mongoose.Promise = global.Promise;
 
+//Database url
+let url = 'mongodb://localhost:27017/drwr'
+
+//Database options
+let options = {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+}
+
 //Import model
 const Item = require('./models/item');
 
 //Add item
 const addItem = (item) => {
     //Connect to database
-    mongoose.connect('mongodb://localhost:27017/drwr', {useNewUrlParser: true,  useUnifiedTopology: true});
+    mongoose.connect(url, options);
     const db = mongoose.connection;
 
     Item.create(item).then(item => {
@@ -21,7 +30,7 @@ const addItem = (item) => {
 
 //List all items
 const listItems = () => {
-    mongoose.connect('mongodb://localhost:27017/drwr', {useNewUrlParser: true,  useUnifiedTopology: true});
+    mongoose.connect(url, options);
     const db = mongoose.connection;
 
     Item.find()
@@ -34,7 +43,7 @@ const listItems = () => {
 //Find an item
 const findItem = (title) => {
     //Connect to database
-    mongoose.connect('mongodb://localhost:27017/drwr', {useNewUrlParser: true,  useUnifiedTopology: true});
+    mongoose.connect(url, options);
     const db = mongoose.connection;
 
     //make case insesitive
@@ -51,7 +60,7 @@ const findItem = (title) => {
 //Update an item
 const updateItem = (_id, item) => {
     //Connect to database
-    mongoose.connect('mongodb://localhost:27017/drwr', {useNewUrlParser: true,  useUnifiedTopology: true});
+    mongoose.connect(url, options);
     const db = mongoose.connection;
 
     Item.updateOne({_id}, item)
@@ -64,7 +73,7 @@ const updateItem = (_id, item) => {
 //Delete an item
 const deleteItem = (_id) => {
     //Connect to database
-    mongoose.connect('mongodb://localhost:27017/drwr', {useNewUrlParser: true,  useUnifiedTopology: true});
+    mongoose.connect(url, options);
     const db = mongoose.connection;
 
     Item.deleteOne({_id})
@@ -79,7 +88,7 @@ const deleteItem = (_id) => {
 //Delete all items
 const deleteAllItems = () => {
     //Connect to database
-    mongoose.connect('mongodb://localhost:27017/drwr', {useNewUrlParser: true,  useUnifiedTopology: true});
+    mongoose.connect(url, options);
     const db = mongoose.connection;
 
     Item.deleteMany({})
@@ -92,7 +101,7 @@ const deleteAllItems = () => {
 //Draw random item
 const drawItem = () => {
     //Connect to database
-    mongoose.connect('mongodb://localhost:27017/drwr', {useNewUrlParser: true,  useUnifiedTopology: true});
+    mongoose.connect(url, options);
     const db = mongoose.connection;
 
     Item.find()
