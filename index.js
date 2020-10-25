@@ -115,21 +115,32 @@ const deleteAllItems = () => {
 }
 
 //Draw random item
-const drawItem = () => {
+const randomItem = (exclude) => {
     //Connect to database
     mongoose.connect(url, options);
     const db = mongoose.connection;
+
+    let randItem;
 
     Item.find()
         .then((items) => {
         if (items.length > 0) {
             let randNum = utilities.genRandNum(0,items.length-1); //generate a random number between start and end of item list.length
-            let randItem = items[randNum];
-            console.info(randItem.type + ': ' + randItem.title);
+            randItem = items[randNum];
+            console.info(randItem.type + ': ' + randItem.title);  
         }
-        else console.info('There are no items in the database');
-        db.close();
-    });
+
+        else console.info('There are no items in the database');    
+    })
+    .then(() => {
+        if (exclude) {
+            Item.updateOne(randItem._id, {include: false});
+            console.info('Item is now excluded');
+        }
+    })
+    .then(() => db.close());
+   
+    
 }
 
 module.exports = {
@@ -139,5 +150,5 @@ module.exports = {
     updateItem,
     deleteItem,
     deleteAllItems,
-    drawItem
+    randomItem
 }

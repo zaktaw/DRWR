@@ -7,7 +7,7 @@ const {
     updateItem,
     deleteItem,
     deleteAllItems,
-    drawItem
+    randomItem
 } = require('./index');
 
 program
@@ -61,11 +61,13 @@ program
 
 //Command: draw a random item
 program
-    .command('draw')
-    .alias('d')
+    .command('random')
+    .alias('r')
     .description('Draws a random item from the database')
-    .action(() => {
-        drawItem();
+    .option('-e, --exclude', 'Exclude the drawn item')
+    .action((cmdObj) => {
+        if (cmdObj.exclude) randomItem(true);
+        else randomItem(false);
     });
 
 program.parse(process.argv);
