@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 //Item schema
 
 const itemSchema = mongoose.Schema({
-    name: {type: String},
+    title: {type: String},
     type: {type: String},
     include: {type: Boolean}
 });

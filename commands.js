@@ -1,5 +1,5 @@
 const program = require('commander');
-const {addItem, listItems} = require('./index');
+const {addItem, listItems, findItem} = require('./index');
 
 program
     .version('1.0.0')
@@ -20,5 +20,12 @@ program
     .alias('l')
     .description('List all items in the database')
     .action(() => listItems());
+
+//Command: find an item
+program
+    .command('find <title>')
+    .alias('f')
+    .description('Find an item in the database')
+    .action((title) => findItem(title));
 
 program.parse(process.argv);

@@ -27,7 +27,20 @@ const listItems = () => {
         });
 }
 
+//Find an item
+const findItem = (title) => {
+    //make case insesitive
+    const search = new RegExp(title, 'i');
+    Item.find({title: search})
+        .then(item => {
+            console.info(`${item.length} matches`);
+            console.info(item);
+            db.close();
+        });
+}
+
 module.exports = {
     addItem,
-    listItems
+    listItems,
+    findItem
 }
