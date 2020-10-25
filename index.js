@@ -39,8 +39,18 @@ const findItem = (title) => {
         });
 }
 
+//Update an item
+const updateItem = (_id, item) => {
+    Item.updateOne({_id}, item)
+        .then(item => {
+            console.info('Item updated');
+            db.close();
+        });
+}
+
 module.exports = {
     addItem,
     listItems,
-    findItem
+    findItem,
+    updateItem
 }

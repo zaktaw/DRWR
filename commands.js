@@ -1,5 +1,5 @@
 const program = require('commander');
-const {addItem, listItems, findItem} = require('./index');
+const {addItem, listItems, findItem, updateItem} = require('./index');
 
 program
     .version('1.0.0')
@@ -25,7 +25,14 @@ program
 program
     .command('find <title>')
     .alias('f')
-    .description('Find an item in the database')
+    .description('Find an item with given title in the database')
     .action((title) => findItem(title));
+
+//Command: update item
+program
+    .command('update <_id> <title> <type>')
+    .alias('u')
+    .description('Updates an item with given id')
+    .action((_id, title, type) => updateItem(_id, {title, type, include: true}));
 
 program.parse(process.argv);
