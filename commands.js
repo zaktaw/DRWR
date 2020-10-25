@@ -26,11 +26,11 @@ program
 
 //Command: list all items
 program
-    .command('list')
+    .command('list [type]')
     .alias('l')
     .description('List all items in the database')
-    .action((cmdObj) => {
-        if (cmdObj.parent.args.length > 1) listItemsOfType(cmdObj.parent.args[1]); // if more than one argument is given
+    .action((type) => {
+        if (type) listItemsOfType(type); // if more than one argument is given
         else listItems();
     });
 
