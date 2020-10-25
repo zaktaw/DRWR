@@ -48,9 +48,19 @@ const updateItem = (_id, item) => {
         });
 }
 
+//Delete an item
+const deleteItem = (_id) => {
+    Item.deleteOne({_id})
+        .then((item) => {
+            console.info('Item deleted');
+            db.close();
+        });
+}
+
 module.exports = {
     addItem,
     listItems,
     findItem,
-    updateItem
+    updateItem,
+    deleteItem
 }

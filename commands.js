@@ -1,5 +1,5 @@
 const program = require('commander');
-const {addItem, listItems, findItem, updateItem} = require('./index');
+const {addItem, listItems, findItem, updateItem, deleteItem} = require('./index');
 
 program
     .version('1.0.0')
@@ -34,5 +34,12 @@ program
     .alias('u')
     .description('Updates an item with given id')
     .action((_id, title, type) => updateItem(_id, {title, type, include: true}));
+
+//Command: delete item
+program
+    .command('delete <_id>')
+    .aliases(['d', 'del'])
+    .description('Deletes an item with given id from the database')
+    .action((_id) => deleteItem(_id));
 
 program.parse(process.argv);
