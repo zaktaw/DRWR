@@ -49,13 +49,13 @@ program
 
 //Command: delete item
 program
-    .command('delete [_id]')
+    .command('delete [title]')
     .alias('del')
-    .description('Deletes an item with given id from the database.')
+    .description('Deletes a given title with given id from the database.')
     .option('-a, --all', 'Delete all items')
-    .action((_id, cmdObj) => {
+    .action((title, cmdObj) => {
         if (cmdObj.all) deleteAllItems(); //if --all or -a is passed as an argument
-        else if (_id) deleteItem(_id) // if an ID is passed as an argument
+        else if (title) deleteItem(title) // if an ID is passed as an argument
         else console.info('Nothing specified, nothing added.');
     });
 

@@ -63,7 +63,7 @@ const findItem = (title) => {
     mongoose.connect(url, options);
     const db = mongoose.connection;
 
-    //make case insesitive
+    //make case insensitive
     const search = new RegExp(title, 'i');
 
     Item.find({title: search})
@@ -88,16 +88,19 @@ const updateItem = (_id, item) => {
 }
 
 //Delete an item
-const deleteItem = (_id) => {
+const deleteItem = (title) => {
     //Connect to database
     mongoose.connect(url, options);
     const db = mongoose.connection;
 
-    Item.deleteOne({_id})
+    //make case insensitive
+    const search = new RegExp(title, 'i');
+
+    Item.deleteOne({title: search})
         .then((item) => {
             //Check if any items has been deleted
             if (item.deletedCount > 0) console.info(chalk.green('Item deleted'));
-            else console.info(chalk.red("Couldn't find any items with matching id. No items deleted."));
+            else console.info(chalk.red("Couldn't find any items with matching title. No items deleted."));
             db.close();
         });
 }
@@ -132,7 +135,9 @@ const randomItem = (type, exclude) => {
             console.info(chalk.white(randItem.type + ': ') + chalk.bold.blue(randItem.title));  
         }
 
-        else console.info(chalk.red('There are no items in the database'));    
+        else {
+            console.info(chalk.red('There are no items ' + (type?('remaining of type: ' + type):'remaining in the database')));    
+        }
     })
     .then(() => {
         if (exclude) {
