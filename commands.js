@@ -1,5 +1,5 @@
 const program = require('commander');
-const {addItem} = require('./index');
+const {addItem, listItems} = require('./index');
 
 program
     .version('1.0.0')
@@ -13,5 +13,12 @@ program
     .action((title, type) => {
         addItem({title, type, include: true});
     });
+
+//Command: list all items
+program
+    .command('list')
+    .alias('l')
+    .description('List all items in the database')
+    .action(() => listItems());
 
 program.parse(process.argv);

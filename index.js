@@ -18,6 +18,16 @@ const addItem = (item) => {
     });
 }
 
+//List all items
+const listItems = () => {
+    Item.find()
+        .then(items => {
+            console.info(items);
+            db.close();
+        });
+}
+
 module.exports = {
-    addItem
+    addItem,
+    listItems
 }
