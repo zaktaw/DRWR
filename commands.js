@@ -3,6 +3,7 @@ const program = require('commander');
 const {
     addItem,
     listItems,
+    listItemsOfType,
     findItem,
     updateItem,
     deleteItem,
@@ -28,7 +29,10 @@ program
     .command('list')
     .alias('l')
     .description('List all items in the database')
-    .action(() => listItems());
+    .action((cmdObj) => {
+        if (cmdObj.parent.args.length > 1) listItemsOfType(cmdObj.parent.args[1]); // if more than one argument is given
+        else listItems();
+    });
 
 //Command: find an item
 program
