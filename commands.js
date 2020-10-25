@@ -5,7 +5,8 @@ const {
     findItem,
     updateItem,
     deleteItem,
-    deleteAllItems
+    deleteAllItems,
+    drawItem
 } = require('./index');
 
 program
@@ -45,13 +46,22 @@ program
 //Command: delete item
 program
     .command('delete [_id]')
-    .aliases(['d', 'del'])
+    .alias('del')
     .description('Deletes an item with given id from the database.')
     .option('-a, --all', 'Delete all items')
     .action((_id, cmdObj) => {
         if (cmdObj.all) deleteAllItems(); //if --all or -a is passed as an argument
         else if (_id) deleteItem(_id) // if an ID is passed as an argument
         else console.info('Nothing specified, nothing added.');
+    });
+
+//Command: draw a random item
+program
+    .command('draw')
+    .alias('d')
+    .description('Draws a random item from the database')
+    .action(() => {
+        drawItem();
     });
 
 program.parse(process.argv);

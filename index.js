@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const utilities = require('./utilites');
 
 //Map global promise (to get rid of warning)
 mongoose.Promise = global.Promise;
@@ -38,7 +39,7 @@ const findItem = (title) => {
 
     //make case insesitive
     const search = new RegExp(title, 'i');
-    
+
     Item.find({title: search})
         .then(item => {
             console.info(`${item.length} matches`);
@@ -88,11 +89,30 @@ const deleteAllItems = () => {
         });
 }
 
+//Draw random item
+const drawItem = () => {
+    //Connect to database
+    mongoose.connect('mongodb://localhost:27017/drwr', {useNewUrlParser: true,  useUnifiedTopology: true});
+    const db = mongoose.connection;
+
+    Item.find()
+        .then((items) => {
+        if (items.length > 0) {
+            let randNum = utilities.genRandNum(0,items.length-1); //generate a random number between start and end of item list.length
+            let randItem = items[randNum];
+            console.info(randItem.type + ': ' + randItem.title);
+        }
+        else console.info('There are no items in the database');
+        db.close();
+    });
+}
+
 module.exports = {
     addItem,
     listItems,
     findItem,
     updateItem,
     deleteItem,
-    deleteAllItems
+    deleteAllItems,
+    drawItem
 }
