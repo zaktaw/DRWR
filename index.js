@@ -9,3 +9,15 @@ const db = mongoose.connection;
 
 //Import model
 const Item = require('./models/item');
+
+//Add item
+const addItem = (item) => {
+    Item.create(item).then(item => {
+        console.info('New item added');
+        db.close();
+    });
+}
+
+module.exports = {
+    addItem
+}
