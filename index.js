@@ -3,15 +3,15 @@ const mongoose = require('mongoose');
 //Map global promise (to get rid of warning)
 mongoose.Promise = global.Promise;
 
-//Connect to database
-mongoose.connect('mongodb://localhost:27017/drwr', {useNewUrlParser: true,  useUnifiedTopology: true});
-const db = mongoose.connection;
-
 //Import model
 const Item = require('./models/item');
 
 //Add item
 const addItem = (item) => {
+    //Connect to database
+    mongoose.connect('mongodb://localhost:27017/drwr', {useNewUrlParser: true,  useUnifiedTopology: true});
+    const db = mongoose.connection;
+
     Item.create(item).then(item => {
         console.info('New item added');
         db.close();
@@ -20,6 +20,9 @@ const addItem = (item) => {
 
 //List all items
 const listItems = () => {
+    mongoose.connect('mongodb://localhost:27017/drwr', {useNewUrlParser: true,  useUnifiedTopology: true});
+    const db = mongoose.connection;
+
     Item.find()
         .then(items => {
             console.info(items);
@@ -29,8 +32,13 @@ const listItems = () => {
 
 //Find an item
 const findItem = (title) => {
+    //Connect to database
+    mongoose.connect('mongodb://localhost:27017/drwr', {useNewUrlParser: true,  useUnifiedTopology: true});
+    const db = mongoose.connection;
+
     //make case insesitive
     const search = new RegExp(title, 'i');
+    
     Item.find({title: search})
         .then(item => {
             console.info(`${item.length} matches`);
@@ -41,6 +49,10 @@ const findItem = (title) => {
 
 //Update an item
 const updateItem = (_id, item) => {
+    //Connect to database
+    mongoose.connect('mongodb://localhost:27017/drwr', {useNewUrlParser: true,  useUnifiedTopology: true});
+    const db = mongoose.connection;
+
     Item.updateOne({_id}, item)
         .then(item => {
             console.info('Item updated');
@@ -50,9 +62,28 @@ const updateItem = (_id, item) => {
 
 //Delete an item
 const deleteItem = (_id) => {
+    //Connect to database
+    mongoose.connect('mongodb://localhost:27017/drwr', {useNewUrlParser: true,  useUnifiedTopology: true});
+    const db = mongoose.connection;
+
     Item.deleteOne({_id})
         .then((item) => {
-            console.info('Item deleted');
+            //Check if any items has been deleted
+            if (item.deletedCount > 0) console.info('Item deleted');
+            else console.info("Couldn't find any items with matching id. No items deleted.");
+            db.close();
+        });
+}
+
+//Delete all items
+const deleteAllItems = () => {
+    //Connect to database
+    mongoose.connect('mongodb://localhost:27017/drwr', {useNewUrlParser: true,  useUnifiedTopology: true});
+    const db = mongoose.connection;
+
+    Item.deleteMany({})
+        .then(() => {
+            console.info('All items deleted');
             db.close();
         });
 }
@@ -62,5 +93,6 @@ module.exports = {
     listItems,
     findItem,
     updateItem,
-    deleteItem
+    deleteItem,
+    deleteAllItems
 }

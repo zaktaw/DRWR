@@ -1,5 +1,12 @@
 const program = require('commander');
-const {addItem, listItems, findItem, updateItem, deleteItem} = require('./index');
+const {
+    addItem,
+    listItems,
+    findItem,
+    updateItem,
+    deleteItem,
+    deleteAllItems
+} = require('./index');
 
 program
     .version('1.0.0')
@@ -37,9 +44,14 @@ program
 
 //Command: delete item
 program
-    .command('delete <_id>')
+    .command('delete [_id]')
     .aliases(['d', 'del'])
-    .description('Deletes an item with given id from the database')
-    .action((_id) => deleteItem(_id));
+    .description('Deletes an item with given id from the database.')
+    .option('-a, --all', 'Delete all items')
+    .action((_id, cmdObj) => {
+        if (cmdObj.all) deleteAllItems(); //if --all or -a is passed as an argument
+        else if (_id) deleteItem(_id) // if an ID is passed as an argument
+        else console.info('Nothing specified, nothing added.');
+    });
 
 program.parse(process.argv);
