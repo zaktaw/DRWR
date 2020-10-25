@@ -1,0 +1,24 @@
+{
+  "name": "drwr",
+  "version": "1.0.0",
+  "description": "A commande line interface application to add, update and read items from a database. Items can be randomly drawn.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zaktaw/DRWR.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zaktaw/DRWR/issues"
+  },
+  "homepage": "https://github.com/zaktaw/DRWR#readme",
+  "dependencies": {
+    "commander": "^6.2.0",
+    "inquirer": "^7.3.3",
+    "mongoose": "^5.10.10"
+  }
+}
