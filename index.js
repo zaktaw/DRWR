@@ -29,30 +29,32 @@ const addItem = (item) => {
 }
 
 //List all items
-const listItems = () => {
+const listItems = (type) => {
     //Connect to database
     mongoose.connect(url, options);
     const db = mongoose.connection;
-
-    Item.find()
-        .then(items => {
-            items.forEach((item) => console.info(item.type + ': ' + item.title));
-            db.close();
-        });
-}
-
-const listItemsOfType = (type) => {
-     //Connect to database
-     mongoose.connect(url, options);
-     const db = mongoose.connection;
-
-     Item.find({type: type})
+  
+    // list items of given type
+    if (type) {
+        Item.find({type: type})
         .then(items => {
             console.info(type + ':');
             items.forEach((item) => console.info(item.title));
             db.close();
         });
-} 
+    }
+
+    // list all items
+    else {
+        Item.find()
+        .then(items => {
+            items.forEach((item) => console.info(item.type + ': ' + item.title));
+            db.close();
+        });
+    }
+    
+    
+}
 
 //Find an item
 const findItem = (title) => {
@@ -133,7 +135,6 @@ const drawItem = () => {
 module.exports = {
     addItem,
     listItems,
-    listItemsOfType,
     findItem,
     updateItem,
     deleteItem,
