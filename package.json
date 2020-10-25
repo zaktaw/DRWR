@@ -3,6 +3,8 @@
   "version": "1.0.0",
   "description": "A commande line interface application to add, update and read items from a database. Items can be randomly drawn.",
   "main": "index.js",
+  "preferGlobal": true,
+  "bin": "./commands.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
