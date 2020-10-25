@@ -115,14 +115,15 @@ const deleteAllItems = () => {
 }
 
 //Draw random item
-const randomItem = (exclude) => {
+const randomItem = (type, exclude) => {
     //Connect to database
     mongoose.connect(url, options);
     const db = mongoose.connection;
 
+    let search = type ? {type: type} : null;  //Search for specific type or any type
     let randItem;
 
-    Item.find()
+    Item.find(search)
         .then((items) => {
         if (items.length > 0) {
             let randNum = utilities.genRandNum(0,items.length-1); //generate a random number between start and end of item list.length
@@ -139,8 +140,6 @@ const randomItem = (exclude) => {
         }
     })
     .then(() => db.close());
-   
-    
 }
 
 module.exports = {

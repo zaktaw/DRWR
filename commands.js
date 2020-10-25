@@ -61,13 +61,13 @@ program
 
 //Command: draw a random item
 program
-    .command('random')
+    .command('random [type]')
     .alias('r')
     .description('Draws a random item from the database')
     .option('-e, --exclude', 'Exclude the drawn item')
-    .action((cmdObj) => {
-        if (cmdObj.exclude) randomItem(true);
-        else randomItem(false);
+    .action((type, cmdObj) => {
+        if (cmdObj.exclude) randomItem(type, true);
+        else randomItem(type, false);
     });
 
 program.parse(process.argv);
