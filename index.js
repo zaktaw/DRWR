@@ -16,6 +16,7 @@ let options = {
 
 //Import model
 const Item = require('./models/item');
+const { setMaxListeners } = require('./models/item');
 
 //Add item
 const addItem = (item) => {
@@ -50,6 +51,7 @@ const listItems = (type) => {
         Item.find()
         .then(items => {
             items.forEach((item) => console.info(item.type + ': ' + chalk.bold.blue(item.title)));
+            console.log(items);
             db.close();
         });
     }
@@ -119,33 +121,38 @@ const deleteAllItems = () => {
 }
 
 //Draw random item
-const randomItem = (type, exclude) => {
+const randomItem = async(type, exclude) => {
     //Connect to database
     mongoose.connect(url, options);
     const db = mongoose.connection;
 
-    let search = type ? {type: type} : null;  //Search for specific type or any type
-    let randItem;
+    let search = {type: type?type:{$exists: true}, include: true}; //Search items with a specific type or any type ($exists: true) and only included items
+   
+    const items = await Item.find(search);
+    let randNum = utilities.genRandNum(0,items.length-1); //generate a random number between start and end of items list
 
-    Item.find(search)
-        .then((items) => {
-        if (items.length > 0) {
-            let randNum = utilities.genRandNum(0,items.length-1); //generate a random number between start and end of item list.length
-            randItem = items[randNum];
-            console.info(chalk.white(randItem.type + ': ') + chalk.bold.blue(randItem.title));  
-        }
+    if (items.length > 0) {
+        let randItem = items[randNum];
+        console.info(chalk.white(randItem.type + ': ') + chalk.bold.blue(randItem.title)); 
 
-        else {
-            console.info(chalk.red('There are no items ' + (type?('remaining of type: ' + type):'remaining in the database')));    
-        }
-    })
-    .then(() => {
+        //Exclude the drawn item
         if (exclude) {
-            Item.updateOne(randItem._id, {include: false});
-            console.info(chalk.green('Item is now excluded'));
+            Item.findOneAndUpdate({_id: randItem._id}, {include: false}, {useFindAndModify: false})
+                .then(() => {
+                    console.info(chalk.yellow(randItem.title + ' is now excluded'));
+                    db.close();
+                });
         }
-    })
-    .then(() => db.close());
+        else {
+            db.close(); 
+        }
+    }
+
+    //No more items left
+    else {
+        console.info(chalk.red('There are no items ' + (type?('remaining of type: ' + type):'remaining in the database')));
+        db.close(); 
+    }
 }
 
 module.exports = {
