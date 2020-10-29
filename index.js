@@ -31,32 +31,31 @@ const addItem = (item) => {
 }
 
 //List all items
-const listItems = (type) => {
+const listItems = async(type, exclude) => {
     //Connect to database
     mongoose.connect(url, options);
     const db = mongoose.connection;
-  
-    // list items of given type
-    if (type) {
-        Item.find({type: type})
-        .then(items => {
-            console.info(chalk.bold(type + ':'));
-            items.forEach((item) => console.info(chalk.blue(item.title)));
-            db.close();
+
+    const search = {
+    type: type?type:{$exists: true}, //Search for any type or a specific type
+    include: exclude?{$exists: true}:true //Also show excluded items or not
+    };
+
+    const items = await Item.find(search);
+
+    if (items.length > 0) {
+        console.info(chalk.green(`Found ${items.length} item${items.length==1?'':'s'}:\n`))
+        items.forEach((item) => {
+            if (!item.include) console.info(chalk.yellow(item.title + ' (' + item.type + ')'));
+            else console.info(item.title + ' (' + item.type + ')');
         });
     }
 
-    // list all items
     else {
-        Item.find()
-        .then(items => {
-            items.forEach((item) => console.info(item.type + ': ' + chalk.bold.blue(item.title)));
-            console.log(items);
-            db.close();
-        });
+        console.info(chalk.red('Found no items'));
     }
-    
-    
+
+    db.close();
 }
 
 //Find an item

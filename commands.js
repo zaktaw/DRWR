@@ -28,9 +28,9 @@ program
     .command('list [type]')
     .alias('l')
     .description('List all items in the database')
-    .action((type) => {
-        if (type) listItems(type); // list items of a specific typee
-        else listItems(); // list all items
+    .option('-e, --exclude', 'Also show excluded items.')
+    .action((type, cmdObj) => {
+        listItems(type, cmdObj.exclude);
     });
 
 //Command: find an item
