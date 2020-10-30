@@ -19,11 +19,23 @@ const Item = require('./models/item');
 const { setMaxListeners } = require('./models/item');
 
 //Add item
-const addItem = (item) => {
+const addItem = async(item) => {
     //Connect to database
     mongoose.connect(url, options);
     const db = mongoose.connection;
 
+    const items = await Item.find();
+
+    // check if an item with the same title and type already exists
+    for (i=0; i<items.length; i++) {
+        if (item.title == items[i].title && item.type == items[i].type) {
+            console.info(chalk.red("An item already exists with these values!"));
+            db.close();
+            return;
+        }
+    }
+
+    // if it doesn't exist, add it
     Item.create(item).then(item => {
         console.info(chalk.green('New item added'));
         db.close();
