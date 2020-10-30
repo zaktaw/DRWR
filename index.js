@@ -101,34 +101,66 @@ const updateItem = (_id, item) => {
 }
 
 //Delete an item
-const deleteItem = (title) => {
+const deleteItem = (title, type, all) => {
     //Connect to database
     mongoose.connect(url, options);
     const db = mongoose.connection;
 
-    //make case insensitive
-    const search = new RegExp(title, 'i');
-
-    Item.deleteOne({title: search})
-        .then((item) => {
-            //Check if any items has been deleted
-            if (item.deletedCount > 0) console.info(chalk.green('Item deleted'));
-            else console.info(chalk.red("Couldn't find any items with matching title. No items deleted."));
-            db.close();
-        });
-}
-
-//Delete all items
-const deleteAllItems = () => {
-    //Connect to database
-    mongoose.connect(url, options);
-    const db = mongoose.connection;
-
-    Item.deleteMany({})
+    //Delete all items
+    if (all) {
+        Item.deleteMany({})
         .then(() => {
             console.info(chalk.green('All items deleted'));
             db.close();
         });
+    }
+
+    else {
+    //make case insensitive
+    const searchTitle = new RegExp(title, 'i');
+    const searchType = new RegExp(type, 'i');
+    let search;
+
+    // delete all items matching input type
+    if (type && !title) {
+        search = {type: searchType};
+        Item.deleteMany(search)
+        .then((items) => {
+            //Check if any items has been deleted
+            if (items.deletedCount > 0) console.info(chalk.green('Items deleted'));
+            else console.info(chalk.red("Couldn't find any items with matching type. No items deleted."));
+            db.close();
+        });
+    }
+
+    // delete all items matching input title
+    else if (title && !type) {
+        search = {tile: searchTitle};
+        Item.deleteMany(search)
+        .then((items) => {
+            //Check if any items has been deleted
+            if (items.deletedCount > 0) console.info(chalk.green('Items deleted'));
+            else console.info(chalk.red("Couldn't find any items with matching title. No items deleted."));
+            db.close();
+        });
+    }
+
+    // delete item matching input title and item (should find 0 or 1 item)
+    else if (title && type) {
+        search = {title: searchTitle, type: searchType};
+        Item.deleteOne(search)
+        .then((item) => {
+            //Check if any items has been deleted
+            if (item.deletedCount > 0) console.info(chalk.green('Item deleted'));
+            else console.info(chalk.red("Couldn't find any items with matching title and type. No items deleted."));
+            db.close();
+        });
+    }
+    else {
+        console.info("Nothing specified, nothing deleted");
+        db.close();
+    } 
+    }
 }
 
 //Draw random item
@@ -172,6 +204,5 @@ module.exports = {
     findItem,
     updateItem,
     deleteItem,
-    deleteAllItems,
     randomItem
 }
